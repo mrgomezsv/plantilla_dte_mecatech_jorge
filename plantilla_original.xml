@@ -1,0 +1,208 @@
+<t t-name="dte_report_invoice.dte_custom_tmp_optional">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <t t-set="disp_logo" t-value="True"/>
+                    <t t-set="disp_website" t-value="True"/>
+                    <t t-set="disp_social" t-value="True"/>
+
+                    <t t-set="facebook_url" t-value="o.company_id.dte_social_facebook_tr"/>
+                    <t t-set="insta_url" t-value="o.company_id.dte_social_instagram_tr"/>
+                    <t t-set="linked_url" t-value="o.company_id.dte_social_linkedin_tr"/>
+                    <t t-set="twitter_url" t-value="o.company_id.dte_social_twitter_tr"/>
+                    <t t-set="youtube_url" t-value="o.company_id.dte_social_youtube_tr"/>
+
+                    <link rel="stylesheet" href="/dte_report_invoice/static/src/css/font.css"/>
+                    <link rel="stylesheet" href="/dte_report_invoice/static/src/css/dte_optional.css"/>
+                    <link rel="stylesheet" href="/dte_report_invoice/static/src/css/dte_custom.css"/>
+                    <link rel="stylesheet" type="text/css" href="/web/static/src/libs/fontawesome/css/font-awesome.css"/>
+
+                    
+                    <div class="container-fluid">
+                        <t t-if="o.dte_inv_state_tr == 'PROCESADO'">
+                            <img t-att-src="'/dte_report_invoice/static/img/watermark/invalidado_rojo_circular.png'" alt="Estado" class="watermark"/>
+                        </t>
+                        <div class="row">
+                            <t t-set="data_tr" t-value="o.with_context(with_record_tr=True, keep_doc_value_og_tr=True).dte_calc_json_values_tr()"/>
+                            <t t-set="target_tr" t-value="o.dte_target_record_tr()"/>
+                            <t t-set="doc_type_tr" t-value="o.doc_type_id.doc_type_id"/>
+                            <t t-set="address" t-value="o.dte_address_tr_id"/>
+                            <div class="col-4 cont_logo_company">
+                                <div>
+                                    <t t-set="target_logo" t-value="o.calc_dte_logo_tr()"/>
+                                    <img id="logo_company" t-if="target_logo" t-att-src="image_data_uri(target_logo)" alt="Logo" style="width: 175px; height: 123px;"/>
+                                </div>
+                            </div>
+
+                            <div class="col-4 cont_qr_dte">
+                                <div>
+                                    <img class="qr_dte" t-att-src="image_data_uri(o.dte_qr_image_tr)" t-if="o.dte_qr_image_tr"/>
+                                </div>
+                            </div>
+                                <div class="col-4 cont_titulo_dte">
+                                    <div>
+                                        <p class="titulo_dte">DOCUMENTO TRIBUTARIO ELECTRÓNICO </p>
+                                        <p class="titulo_dte_name" t-field="o.doc_type_id.name"/>
+                                    </div>
+                                </div>
+                        </div>
+                        
+                        <div class="row cuadro_s1">
+                            <div class="colum_datos">
+                                <div>
+                                    <p><span class="upp_title"> Código de Generación: </span><span class="upp_cont" t-field="o.dte_uuid_upper_tr"/></p>
+                                    <p><span class="upp_title"> Número de Control: </span><span class="upp_cont" t-field="o.dte_ctrl_number_tr"/></p>
+                                    <t t-set="trans_type" t-value="{'1': 'Normal', '2': 'Contingencia'}"/>
+                                    <p><span class="upp_title">Tipo de Transmisión:</span> <span class="upp_cont" t-esc="trans_type.get(o.dte_transmission_type_tr, '')"/></p>
+                                    <p><span class="upp_title">Versión JSON: </span><span class="upp_cont" t-esc="data_tr['identificacion']['version']"/></p>
+                                </div>
+                            </div>
+                            <div class="col-1"> </div>
+                            <div class="colum_datos">
+                                <div>
+                                    <p><span class="upp_title"> Sello de Recepción: </span><span class="upp_cont" t-field="o.dte_received_stamp_tr"/></p>
+                                    <p><t t-set="inv_type" t-value="{'1': 'Previo', '2': 'Diferido'}"/>
+                                    <span class="upp_title">Módelo de Facturación: </span><span class="upp_cont" t-esc="inv_type.get(o.dte_invoicing_model_tr, '')"/></p>
+                                    <p><span class="upp_title">Moneda: </span><span class="upp_cont" t-esc="data_tr['identificacion']['tipoMoneda']"/></p>
+                                    <p><span class="upp_title">Fecha y Hora de Generación: </span><span class="upp_cont" t-field="o.dte_generation_date_tr"/></p>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <t t-set="data_tr" t-value="o.with_context(with_record_tr=True, keep_doc_value_og_tr=True).dte_calc_json_values_tr()"/>
+                            <t t-set="target_tr" t-value="o.dte_target_record_tr()"/>
+                            <t t-set="doc_type_tr" t-value="o.doc_type_id.doc_type_id"/>
+                            <t t-set="address" t-value="o.dte_address_tr_id"/>
+
+                            <div class="colum_datos">
+                                <div t-att-class="'cuadro_datos ' + ('altura_65mm' if doc_type_tr.dte_code == '11' else 'altura_55mm')">
+                                    <p class="titulo_datos">EMISOR</p>
+
+                                    <div class="texto_datos">
+                                    <p class="nombre_contribuyentes" t-esc="address.business_name or address.name"/>
+                                    
+                                    <p><span class="upp_title">NIT: </span><span class="upp_cont" t-field="address.nit"/></p>
+                                    <p><span class="upp_title">NRC: </span><span class="upp_cont" t-field="address.nrc"/></p>
+                                    <p><span class="upp_title">Actividad Económica: </span><span class="upp_cont" t-esc="data_tr['emisor']['descActividad']"/></p>
+                                    <p><span class="upp_title">Dirección: </span><span class="upp_cont" t-esc="address.get_partner_addr(address, ['street', 'street2', 'city', 'municipality_tr_id', 'state_id', 'country_id'])"/></p>
+                                    <p><span class="upp_title">Teléfono: </span><span class="upp_cont" t-esc="address.phone"/></p>
+                                    <p><span class="upp_title">Email: </span><span class="upp_cont" t-field="address.email"/></p>
+                                    <p><span class="upp_title">Nombre Comercial: </span><span class="upp_cont" t-esc="address.dte_comml_name_tr"/></p>
+                                    <p><span class="upp_title">Establecimiento: </span><span class="upp_cont" t-field="o.journal_id.dte_establishment_tr_id.name"/></p>
+                                    <t t-if="doc_type_tr.dte_code == '11'">
+                                        <p><span class="upp_title">Recinto Fiscal: </span><span class="upp_cont" t-field="o.dte_exp_fiscal_precinct_tr_id"/></p>
+                                        <p><span class="upp_title">Régimen de Exportación: </span><span class="upp_cont" t-field="o.dte_exp_regime_tr_id"/></p>
+                                    </t>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-1"> </div>
+                            <div class="colum_datos">
+                                    <div t-att-class="'cuadro_datos ' + ('altura_65mm' if doc_type_tr.dte_code == '11' else 'altura_55mm')">
+                                        <t t-set="address" t-value="o.partner_id"/>
+                                        <t t-set="selector_tr" t-value="'receptor' if doc_type_tr.dte_code != '14' else 'sujetoExcluido'"/>
+                                        <t t-if="doc_type_tr.dte_code == '15'">
+                                            <t t-set="selector_tr" t-value="'donante'"/>
+                                        </t>
+                                        <p class="titulo_datos">RECEPTOR</p>
+
+                                        <div class="texto_datos">
+                                        <p class="nombre_contribuyentes">
+                                            <t t-esc="(address.business_name or address.name) + (address.ref and ' - ' + address.ref or '')"/>
+                                        </p>
+                                        
+                                        <t t-if="doc_type_tr.dte_code in ['01', '14', '07']">        
+                                            <p><span class="upp_title">Tipo Identificación: </span><span class="upp_cont" t-field="address.mh_doc_type_tr_id"/></p>
+                                            <p><span class="upp_title">No. Identificación: </span><span class="upp_cont" t-field="address.f987_doc_number"/></p>
+                                        </t>
+
+                                        <t t-if="doc_type_tr.dte_code == '11' and address.mh_doc_type_tr_id.dte_code_tr == '36'">
+                                            <p><span class="upp_title">Identificación: </span><span class="upp_cont" t-esc="address.nit"/></p>
+                                        </t>
+
+                                        <t t-if="doc_type_tr.dte_code == '11' and address.mh_doc_type_tr_id.dte_code_tr == '37'">
+                                            <p><span class="upp_title">Identificación: </span><span class="upp_cont" t-esc="address.vat"/></p>
+                                        </t>
+
+                                        <t t-if="doc_type_tr.dte_code in ['03', '05', '06']">
+                                            <p><span class="upp_title">NIT: </span><span class="upp_cont" t-field="address.nit"/></p>
+                                            <p><span class="upp_title">NRC: </span><span class="upp_cont" t-field="address.nrc"/></p>
+                                        </t>
+
+                                        <t t-if="doc_type_tr.dte_code == '07'">
+                                            <p><span class="upp_title">NRC: </span><span class="upp_cont" t-field="address.nrc"/></p>
+                                        </t>
+                                        
+                                        <t t-if="doc_type_tr.dte_code not in ['01', '14', '15']">
+                                            <p><span class="upp_title">Actividad Económica: </span><span class="upp_cont" t-esc="data_tr['receptor']['descActividad']"/></p>
+                                        </t>
+                                    
+                                        <t t-if="doc_type_tr.dte_code != '14'">
+                                            <p><span class="upp_title">Email: </span><span class="upp_cont" t-esc="address.email"/></p>        
+                                        </t>
+                                        
+                                        <t t-if="doc_type_tr.dte_code in ['14', '15']">
+                                            <p><span class="upp_title">Teléfono: </span><span class="upp_cont" t-esc="address.email"/></p>
+                                        </t>
+                                        
+                                        <t t-if="doc_type_tr.dte_code == '11'">        
+                                            <p><span class="upp_title">País Destino: </span><span class="upp_cont" t-field="address.country_id"/></p>
+                                        </t>
+                                        
+                                        <p><span class="upp_title">Dirección: </span><span class="upp_cont" t-esc="address.get_partner_addr(address, ['street', 'street2', 'city', 'municipality_tr_id', 'state_id', 'country_id'])"/></p>
+                                        <p><span class="upp_title">Nombre Comercial: </span><span class="upp_cont" t-esc="address.dte_comml_name_tr"/></p>
+
+                                        <t t-if="doc_type_tr.dte_code == '09'">
+                                            <span class="upp_title"> Tipo de Establecimiento: </span><span class="upp_cont" t-field="o.journal_id.dte_establishment_tr_id"/>
+                                        </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <br/>
+                        <div t-if="'documentoRelacionado' in data_tr and data_tr['documentoRelacionado']">
+                            <div><p class="titulo_datos">DOCUMENTOS RELACIONADOS</p></div>
+                            <table class="lines_cont table_relacionados">
+                                <thead class="head_tr">
+                                    <tr>
+                                        <td class="desc_col_th">Tipo de Documento</td>
+                                        <td class="desc_col_th">N° de documento</td>
+                                        <td class="desc_col_th">Fecha de documento</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="data_tr['documentoRelacionado']" t-as="line" class="line_tr">
+                                        <t t-set="curr_move" t-value="line['record']"/>
+                                        <td><span t-field="curr_move.doc_type_id"/></td>
+                                        <td><span t-esc="line['numeroDocumento']"/></td>
+                                        <td><span t-field="curr_move.dte_generation_date_tr"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br/>
+                        <t t-if="doc_type_tr and doc_type_tr.dte_code in ('01','03','05','06')">
+                            <t t-call="dte_report_invoice.optional_dte_lines_tmp"/>
+                        </t>
+                        <t t-elif="doc_type_tr and doc_type_tr.dte_code == '11'">
+                            <t t-call="dte_report_invoice.optional_dte_lines_tmp_exp"/>
+                        </t>
+                        <t t-elif="doc_type_tr and doc_type_tr.dte_code == '14'">
+                            <t t-call="dte_report_invoice.optional_dte_lines_tmp_fse"/>
+                        </t>
+                        <t t-else="">
+                        <!-- Opcional: plantilla por defecto o nada -->
+                        <!-- <t t-call="dte_report_invoice.optional_dte_lines_tmp"/> -->
+                        </t>
+
+                        <!--Todo lo demas es igual-->
+                        <t t-call="dte_report_invoice.dte_condition_tmp"/>
+                        <t t-call="dte_report_invoice.dte_responsible_tmp"/>
+                        <t t-call="dte_report_invoice.dte_appendix_tmp"/>
+                        <t t-call="dte_report_invoice.dte_appendix_tmp_total"/>
+                        <p id="emi_filler">
+                        </p>
+                    </div>
+                </t>
+            </t>
+        </t>
