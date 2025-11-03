@@ -197,54 +197,28 @@
                         
 
                       <t t-else="">
-                        <!-- Opcional: plantilla por defecto o nada -->
-                        <!-- <t t-call="dte_report_invoice.optional_dte_lines_tmp"/> -->
                         </t>
 
                         <!--Todo lo demas es igual-->
                         <!-- Condiciones de Pago -->
-                        <div style="border:1px solid #000; padding:10px; margin-top:10px;">
-                            <p style="margin:5px 0; padding:5px 0;">
+                        
+                        <div style="border:1px solid #000; padding:5px; margin-top:10px;">
+                            <p style="margin:2px 0; padding:2px 0;">
                                 <strong>Valor en Letras: </strong>
                                 <span t-esc="data_tr['resumen']['totalLetras']"/>
                             </p>
-                            <p t-if="doc_type_tr.dte_code not in ['15', '04']" style="margin:5px 0; padding:5px 0;">
+                            <p t-if="doc_type_tr.dte_code not in ['15', '04']" style="margin:2px 0; padding:2px 0;">
                                 <strong>Condición de la Operación: </strong>
                                 <span t-field="o.invoice_payment_term_id.name"/>
                             </p>
-                            <p style="margin:5px 0; padding:5px 0;">
+                            <p style="margin:2px 0; padding:2px 0;">
                                 <strong>Observaciones: </strong>
                                 <span t-field="o.dte_observations_tr"/>
                             </p>
                         </div>
+
                         <!-- Fin Condiciones de Pago -->
                         
-                        <!--<t t-call="dte_report_invoice.dte_responsible_tmp"/>-->
-                        <!--<t t-call="dte_report_invoice.dte_condition_tmp"/>-->
-                        <!--<t t-call="dte_report_invoice.dte_responsible_tmp"/>-->
-                        
-                        <!-- Bloque de Responsables (alineado al original, con bordes completos) -->
-                        
-                        <!-- Responsables y Firma -->
-                        <!--<div style="border:1px solid #000; padding:6px 12px 25px 12px; margin-top:5px; min-height:110px;">-->
-                        <!--    <table style="width:100%; border-collapse:separate; border-spacing:0;">-->
-                        <!--        <tr>-->
-                        <!--             Columna izquierda -->
-                        <!--            <td style="width:48%; vertical-align:top; padding:0; border:none;">-->
-                        <!--                <p style="margin:0; font-size:11px;">Responsable del Emisor:</p>-->
-                        <!--                <p style="margin-top:40px; font-size:11px;">Responsable del Receptor:</p>-->
-                        <!--            </td>-->
-                                    
-                        <!--             Columna derecha -->
-                        <!--            <td style="width:48%; vertical-align:top; padding:0; border:none;">-->
-                        <!--                <p style="margin:0; font-size:11px;">N° de Documento:</p>-->
-                        <!--                <p style="margin-top:40px; font-size:11px;">N° de Documento:</p>-->
-                        <!--            </td>-->
-                        <!--        </tr>-->
-                        <!--    </table>-->
-                        <!--</div>-->
-                        
-
                         <!-- Fin Responsables y Firma -->
                         <t t-call="dte_report_invoice.dte_responsible_tmp"/>
                         <t t-call="dte_report_invoice.dte_appendix_tmp"/>
